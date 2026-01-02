@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Friendship Vote | Dark Mode</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            background-color: #020617; 
+        }
+        .glass-card {
+            background: rgba(30, 41, 59, 0.4);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        input:-webkit-autofill,
+        input:-webkit-autofill:hover, 
+        input:-webkit-autofill:focus {
+            -webkit-text-fill-color: white;
+            -webkit-box-shadow: 0 0 0px 1000px #1e293b inset;
+            transition: background-color 5000s ease-in-out 0s;
+        }
+    </style>
+</head>
+<body class="text-slate-200 min-h-screen flex items-center justify-center p-6">
+
+    <div class="max-w-md w-full">
+        <header class="text-center mb-10">
+            <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-tr from-indigo-600 to-violet-500 shadow-lg shadow-indigo-500/20 mb-6">
+                <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+                </svg>
+            </div>
+            <h1 class="text-4xl font-extrabold text-white tracking-tight">Best Friend <span class="text-indigo-400">Vote</span></h1>
+            <p class="text-slate-400 font-medium mt-2">Cast your vote for the ultimate companion</p>
+        </header>
+
+        {% if winner %}
+        <div class="relative overflow-hidden bg-gradient-to-br from-indigo-600 to-fuchsia-600 p-1 rounded-[2rem] mb-8 shadow-2xl">
+            <div class="bg-slate-900 rounded-[1.9rem] p-6 text-center">
+                <span class="text-4xl mb-2 block">🏆</span>
+                <h2 class="text-2xl font-black text-white mb-1">Winner Declared!</h2>
+                <p class="text-slate-300">{{ winner }} has reached 12 votes!</p>
+                <a href="/results" class="mt-4 inline-flex items-center gap-2 bg-white text-slate-900 px-6 py-2.5 rounded-xl font-bold hover:scale-105 transition-transform">
+                    View Results
+                </a>
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="glass-card p-8 rounded-[2.5rem] shadow-2xl">
+            <form action="/vote" method="POST" class="space-y-6">
+                <div class="space-y-1.5">
+                    <label class="text-xs font-bold text-slate-400 uppercase tracking-widest ml-1">Your Name</label>
+                    <input type="text" name="name" placeholder="John Doe" required 
+                           class="w-full bg-slate-800/50 border border-slate-700 p-4 rounded-2xl text-white placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all">
+                </div>
+
+                <div class="space-y-1.5">
+                    <label class="text-xs font-bold text-slate-400 uppercase tracking-widest ml-1">Roll Number</label>
+                    <input type="text" name="roll" placeholder="e.g. 101" required 
+                           class="w-full bg-slate-800/50 border border-slate-700 p-4 rounded-2xl text-white placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all">
+                </div>
+
+                <div class="space-y-1.5">
+                    <label class="text-xs font-bold text-slate-400 uppercase tracking-widest ml-1">Gender</label>
+                    <select name="gender" required 
+                            class="w-full bg-slate-800/50 border border-slate-700 p-4 rounded-2xl text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all appearance-none cursor-pointer">
+                        <option value="" class="bg-slate-900">Select Gender</option>
+                        <option value="Male" class="bg-slate-900">Male</option>
+                        <option value="Female" class="bg-slate-900">Female</option>
+                        <option value="Other" class="bg-slate-900">Other</option>
+                    </select>
+                </div>
+
+                <div class="space-y-1.5">
+                    <label class="text-xs font-bold text-slate-400 uppercase tracking-widest ml-1">Choose Candidate</label>
+                    <div class="grid grid-cols-1 gap-3">
+                        {% for candidate in candidates %}
+                        <label class="relative group cursor-pointer">
+                            <input type="radio" name="friend" value="{{ candidate }}" required class="peer sr-only">
+                            <div class="p-4 rounded-2xl bg-slate-800/30 border border-slate-700 flex items-center justify-between peer-checked:border-indigo-500 peer-checked:bg-indigo-500/10 transition-all group-hover:bg-slate-800/60">
+                                <span class="font-semibold text-slate-300 peer-checked:text-white">{{ candidate }}</span>
+                                <div class="w-5 h-5 rounded-full border-2 border-slate-600 flex items-center justify-center peer-checked:border-indigo-500">
+                                    <div class="w-2.5 h-2.5 rounded-full bg-indigo-500 scale-0 peer-checked:scale-100 transition-transform"></div>
+                                </div>
+                            </div>
+                        </label>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <button type="submit" class="w-full relative group overflow-hidden bg-indigo-600 p-4 rounded-2xl font-bold text-white shadow-lg shadow-indigo-600/20 hover:bg-indigo-500 transition-all">
+                    <span class="relative z-10">Submit Vote</span>
+                    <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
+                </button>
+            </form>
+
+            <div class="mt-8 pt-6 border-t border-slate-800 text-center">
+                <a href="/results" class="inline-flex items-center gap-2 text-indigo-400 font-bold hover:text-indigo-300 transition-colors group">
+                    <span>View Live Standings</span>
+                    <svg class="w-4 h-4 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+                </a>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
